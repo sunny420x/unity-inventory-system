@@ -8,7 +8,7 @@ public class InputSystem : MonoBehaviour
 {
     [Header("Prefabs")]
     [SerializeField] private GameObject interactPanel;
-    public TMP_Text interaction_text;
+    public TMP_Text interactionText;
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private GameObject ItemHoldPosition;
@@ -113,7 +113,7 @@ public class InputSystem : MonoBehaviour
                         if(ObjScript.type == "Holdable") {
                             interactPanel.SetActive(true);
                             if(!isHold) {
-                                interaction_text.text = "Press [LeftClick] to Hold.";
+                                interactionText.text = "Press [LeftClick] to Hold.";
                             }
 
                             if(Input.GetMouseButtonDown(0)) {
@@ -128,7 +128,7 @@ public class InputSystem : MonoBehaviour
                         if (ObjScript.type == "Item")
                         {
                             interactPanel.SetActive(true);
-                            interaction_text.text = "Press [E] to Pick up.";
+                            interactionText.text = "Press [E] to Pick up.";
 
                             if (Input.GetKeyDown(KeyCode.E))
                             {
@@ -142,7 +142,7 @@ public class InputSystem : MonoBehaviour
                         if (ObjScript.type == "Note")
                         {
                             interactPanel.SetActive(true);
-                            interaction_text.text = "Press [E] to Read.";
+                            interactionText.text = "Press [E] to Read.";
 
                             if(pauseMenuStatus == false)
                             {
@@ -159,7 +159,7 @@ public class InputSystem : MonoBehaviour
                         if (ObjScript.type == "Talk")
                         {
                             interactPanel.SetActive(true);
-                            interaction_text.text = "Press [E] to Talk.";
+                            interactionText.text = "Press [E] to Talk.";
 
                             if (pauseMenuStatus == false) //Check if Pause Menu is Active.
                             {
@@ -170,7 +170,7 @@ public class InputSystem : MonoBehaviour
                             }
                         }
                     } else {
-                        interaction_text.text = "";
+                        interactionText.text = "";
                     }
                     //Close
                     if (Input.GetKeyDown(KeyCode.Q))
@@ -194,7 +194,7 @@ public class InputSystem : MonoBehaviour
                 default:
                     //e_btn_status = false;
                     interactPanel.SetActive(false);
-                    interaction_text.text = "";
+                    interactionText.text = "";
 
                     if (checkHit == true) 
                     {
@@ -208,7 +208,7 @@ public class InputSystem : MonoBehaviour
         //Holding Item
         if(isHold) {
             interactPanel.SetActive(true);
-            interaction_text.text = "Press [Q] to Drop.";
+            interactionText.text = "Press [Q] to Drop.";
             if(Input.GetKeyDown(KeyCode.Q)) {
                 isHold = false;
                 carryingObj.GetComponent<Collider>().isTrigger = false;

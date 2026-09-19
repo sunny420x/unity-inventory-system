@@ -62,7 +62,7 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
             EquipItem(Player, current_selected_slot, current_selected_item);
         });
 
-        slots = Player.GetComponent<Inventory>().inventory_slots;
+        slots = Player.GetComponent<Inventory>().inventorySlots;
     }
 
     void Update()
@@ -79,18 +79,18 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
 
     void UseItem(GameObject Inventory, int slot_id, int obj_id)
     {
-        var inventory_data = Player.GetComponent<Inventory>().inventory_data;
-        var inventory_items_amounts = Player.GetComponent<Inventory>().inventory_items_amounts;
-        if (inventory_items_amounts[slot_id] > 1)
+        var inventoryData = Player.GetComponent<Inventory>().inventoryData;
+        var inventoryItemsAmounts = Player.GetComponent<Inventory>().inventoryItemsAmounts;
+        if (inventoryItemsAmounts[slot_id] > 1)
         {
-            inventory_items_amounts[slot_id] -= 1;
+            inventoryItemsAmounts[slot_id] -= 1;
         }
         else
         {
-            if (inventory_items_amounts[slot_id] == 1)
+            if (inventoryItemsAmounts[slot_id] == 1)
             {
-                inventory_data[slot_id] = 0;
-                inventory_items_amounts[slot_id] = 0;
+                inventoryData[slot_id] = 0;
+                inventoryItemsAmounts[slot_id] = 0;
                 SetInventoryItemDetail(0);
             }
         }
@@ -104,8 +104,8 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
 
     void DropItem(GameObject Inventory, int slot_id, int obj_id)
     {
-        var inventory_data = Player.GetComponent<Inventory>().inventory_data;
-        var inventory_items_amounts = Player.GetComponent<Inventory>().inventory_items_amounts;
+        var inventoryData = Player.GetComponent<Inventory>().inventoryData;
+        var inventoryItemsAmounts = Player.GetComponent<Inventory>().inventoryItemsAmounts;
 
         if (slot_id == current_hold_item_slot_id)
         {
@@ -116,16 +116,16 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
             current_hold_item = null;
         }
 
-        if (inventory_items_amounts[slot_id] > 1)
+        if (inventoryItemsAmounts[slot_id] > 1)
         {
-            inventory_items_amounts[slot_id] -= 1;
+            inventoryItemsAmounts[slot_id] -= 1;
         }
         else
         {
-            if (inventory_items_amounts[slot_id] == 1)
+            if (inventoryItemsAmounts[slot_id] == 1)
             {
-                inventory_data[slot_id] = 0;
-                inventory_items_amounts[slot_id] = 0;
+                inventoryData[slot_id] = 0;
+                inventoryItemsAmounts[slot_id] = 0;
                 SetInventoryItemDetail(0);
             }
         }
@@ -257,7 +257,7 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
 
     public void ClickOnSlot(int slot_id)
     {
-        var item_id = Player.GetComponent<Inventory>().inventory_data[slot_id];
+        var item_id = Player.GetComponent<Inventory>().inventoryData[slot_id];
         Debug.Log("Selecting: " + slot_id + " is " + item_id);
         if (item_id != 0)
         {

@@ -17,16 +17,16 @@ public class PlayerStatus : MonoBehaviour
 
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject PlayerCam;
-    private GameObject player_controller;
-    [SerializeField] private Animator player_animator;
-    [SerializeField] private Slider stamina_bar;
-    [SerializeField] private TMP_Text health_text;
+    private GameObject playerController;
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private Slider staminaBar;
+    [SerializeField] private TMP_Text healthText;
 
     [SerializeField] private PlayerAnimationController PlayerAnimationController;
     [SerializeField] private Footsteps Footsteps;
 
     [Header("Sound Effects")]
-    [SerializeField] private AudioClip hit_sound_effect;
+    [SerializeField] private AudioClip hitSoundEffect;
     private float UISoundVolume;
 
     private float MoveSpeed;
@@ -36,37 +36,37 @@ public class PlayerStatus : MonoBehaviour
     private bool isCrouchWalking;
 
     void Start() {
-        player_controller = player.transform.Find("PlayerCapsule").gameObject;
+        playerController = player.transform.Find("PlayerCapsule").gameObject;
         UISoundVolume = PlayerCam.GetComponent<InputSystem>().UISoundVolume;
-        MoveSpeed = player_controller.GetComponent<FirstPersonController>().MoveSpeed;
-        SprintSpeed = player_controller.GetComponent<FirstPersonController>().SprintSpeed;
+        MoveSpeed = playerController.GetComponent<FirstPersonController>().MoveSpeed;
+        SprintSpeed = playerController.GetComponent<FirstPersonController>().SprintSpeed;
         stepRate = Footsteps.GetComponent<Footsteps>().stepRate;
     }
 
     void Update() {
-        stamina_bar.value = stamina;
-        health_text.text = health.ToString();
+        staminaBar.value = stamina;
+        healthText.text = health.ToString();
 
         isCrouch = PlayerAnimationController.GetComponent<PlayerAnimationController>().isCrouch;
         isCrouchWalking = PlayerAnimationController.GetComponent<PlayerAnimationController>().isCrouchWalking;
 
         if (stamina < 10)
         {
-            player_controller.GetComponent<FirstPersonController>().SprintSpeed = MoveSpeed;
+            playerController.GetComponent<FirstPersonController>().SprintSpeed = MoveSpeed;
             Footsteps.GetComponent<Footsteps>().stepRate = stepRate;
         }
         else
         {
             if (isCrouch)
             {
-                player_controller.GetComponent<FirstPersonController>().MoveSpeed = MoveSpeed / 2;
-                player_controller.GetComponent<FirstPersonController>().SprintSpeed = MoveSpeed / 2;
+                playerController.GetComponent<FirstPersonController>().MoveSpeed = MoveSpeed / 2;
+                playerController.GetComponent<FirstPersonController>().SprintSpeed = MoveSpeed / 2;
                 Footsteps.GetComponent<Footsteps>().stepRate = stepRate * 2.0f;
             }
             else
             {
-                player_controller.GetComponent<FirstPersonController>().MoveSpeed = MoveSpeed;
-                player_controller.GetComponent<FirstPersonController>().SprintSpeed = SprintSpeed;
+                playerController.GetComponent<FirstPersonController>().MoveSpeed = MoveSpeed;
+                playerController.GetComponent<FirstPersonController>().SprintSpeed = SprintSpeed;
                 Footsteps.GetComponent<Footsteps>().stepRate = stepRate;
             }
         }
@@ -92,14 +92,14 @@ public class PlayerStatus : MonoBehaviour
         {
             Footsteps.GetComponent<Footsteps>().stepRate = stepRate / 1.5f;
         }
-        stamina_bar.transform.gameObject.SetActive(true);
+        staminaBar.transform.gameObject.SetActive(true);
         this.stamina -= (float) this.staminaDecreaseRate * (Time.deltaTime);
         this.stamina = Mathf.Clamp(this.stamina, 0f, 100f);
     }
 
     public void Resting() {
         Footsteps.GetComponent<Footsteps>().stepRate = stepRate;
-        stamina_bar.transform.gameObject.SetActive(false);
+        staminaBar.transform.gameObject.SetActive(false);
         this.stamina += (float) this.staminaIncreaseRate * (Time.deltaTime);
         this.stamina = Mathf.Clamp(this.stamina, 0f, 100f);
     }

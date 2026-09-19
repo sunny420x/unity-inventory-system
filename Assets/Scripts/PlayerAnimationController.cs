@@ -4,7 +4,7 @@ using StarterAssets;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    Animator player_animator;
+    Animator playerAnimator;
 
     [SerializeField] private GameObject playerCapsule;
     private CapsuleCollider capsuleCollider;
@@ -12,8 +12,8 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private FirstPersonController FirstPersonControllerScript;
     [SerializeField] private PlayerStatus PlayerStatus;
 
-    float crouch_x, crouch_z;
-    float playerCam_x, playerCam_z;
+    float crouchX, crouchZ;
+    float playerCamX, playerCamZ;
     float playerBodyZ;
 
     public bool isCrouch;
@@ -26,13 +26,13 @@ public class PlayerAnimationController : MonoBehaviour
 
     void Start()
     {
-        player_animator = GetComponent<Animator>();
+        playerAnimator = GetComponent<Animator>();
         capsuleCollider = playerCapsule.GetComponent<CapsuleCollider>();
 
-        playerCam_x = PlayerCameraRoot.transform.localPosition.x;
-        playerCam_z = PlayerCameraRoot.transform.localPosition.z;
-        crouch_x = playerCam_x;
-        crouch_z = playerCam_z;
+        playerCamX = PlayerCameraRoot.transform.localPosition.x;
+        playerCamZ = PlayerCameraRoot.transform.localPosition.z;
+        crouchX = playerCamX;
+        crouchZ = playerCamZ;
 
         playerBodyZ = gameObject.transform.localPosition.z;
     }
@@ -62,7 +62,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if(isCrouch) {
             //Set player camera lower at crouch.
-            PlayerCameraRoot.transform.localPosition = new Vector3(crouch_x, 0.7f, crouch_z);
+            PlayerCameraRoot.transform.localPosition = new Vector3(crouchX, 0.7f, crouchZ);
             targetCenter = new Vector3(capsuleCollider.center.x, -0.6f, 0.4f);
 
             //Move Player Model A little bit backward.
@@ -71,7 +71,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if(!isCrouch) {
             //Set player camera back to normal.
-            PlayerCameraRoot.transform.localPosition = new Vector3(playerCam_x - 0.1f, 1.8633f, playerCam_z - 0.1f);
+            PlayerCameraRoot.transform.localPosition = new Vector3(playerCamX - 0.1f, 1.8633f, playerCamZ - 0.1f);
             targetCenter = new Vector3(capsuleCollider.center.x, 0f, 0f);
 
             //Move Player Model back to the starting position.
@@ -80,9 +80,9 @@ public class PlayerAnimationController : MonoBehaviour
 
         capsuleCollider.center = Vector3.Lerp(capsuleCollider.center, targetCenter, Time.deltaTime * 5f);
 
-        player_animator.SetBool("isRunning", isRunning);
-        player_animator.SetBool("isWalking", isMoving && !isRunning);
-        player_animator.SetBool("isCrouching", isCrouch);
-        player_animator.SetBool("isCrouchWalking", isCrouch && isCrouchWalking && isMoving);
+        playerAnimator.SetBool("isRunning", isRunning);
+        playerAnimator.SetBool("isWalking", isMoving && !isRunning);
+        playerAnimator.SetBool("isCrouching", isCrouch);
+        playerAnimator.SetBool("isCrouchWalking", isCrouch && isCrouchWalking && isMoving);
     }
 }

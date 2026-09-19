@@ -11,45 +11,48 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject items_manager;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject Background;
-    private bool inventory_status = false;
+    private bool inventoryStatus = false;
 
     private GameObject PlayerCam;
     private GameObject PlayerFollowCamera;
 
     [Header("Inventory Data")]
-    public int[] inventory_data = new int[]{
+    public int[] inventoryData = new int[]{
         0,0,0,0,0,0,0,0,0,0,0,0,0,0
     };
-    public int[] inventory_items_amounts = new int[]{
+    public int[] inventoryItemsAmounts = new int[]{
         0,0,0,0,0,0,0,0,0,0,0,0,0,0
     };
 
     [Header("Inventory Amount Text Display (TextMeshPro)")]
     [Tooltip("Each slot textmesh goes here !")]
-    [SerializeField] private TMP_Text[] inventory_items_amounts_tmp = new TMP_Text[]{
+    [SerializeField] private TMP_Text[] inventoryItemsAmounts_tmp = new TMP_Text[]{
     };
 
     [Header("Inventory Slots")]
     [Tooltip("Each slot of inventory canvas goes here !")]
-    public GameObject[] inventory_slots = new GameObject[]{
+    public GameObject[] inventorySlots = new GameObject[]{
     };
 
     private Item[] items;
 
     [Header("Player Audio Source")]
-    private AudioSource player_audio;
+    private AudioSource playerAudio;
     private float UISoundVolume;
-    [SerializeField] private AudioClip inventory_clip;
+    [SerializeField] private AudioClip inventoryClip;
+
+    [SerializeField] private int currentEquippedItem = 0;
+    [SerializeField] private GameObject currentEquippedItemText;
 
     void Start()
     {
         PlayerCam = GameObject.Find("MainCamera");
         PlayerFollowCamera = GameObject.Find("PlayerFollowCamera");
         items = items_manager.GetComponent<Items>().items;
-        inventory.SetActive(inventory_status);
-        Background.SetActive(inventory_status);
+        inventory.SetActive(inventoryStatus);
+        Background.SetActive(inventoryStatus);
         UISoundVolume = PlayerCam.GetComponent<InputSystem>().UISoundVolume;
-        player_audio = GetComponent<AudioSource>();
+        playerAudio = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -57,62 +60,62 @@ public class Inventory : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             DrawIcon();
-            if (inventory_status == false)
+            if (inventoryStatus == false)
             {
                 PlayerCam.GetComponent<InputSystem>().PauseGame();
-                inventory_status = true;
+                inventoryStatus = true;
                 Cursor.lockState = CursorLockMode.Confined;
-                Background.SetActive(inventory_status);
-                inventory.SetActive(inventory_status);
-                player_audio.PlayOneShot(inventory_clip, UISoundVolume);
+                Background.SetActive(inventoryStatus);
+                inventory.SetActive(inventoryStatus);
+                playerAudio.PlayOneShot(inventoryClip, UISoundVolume);
 
             } else
             {
                 PlayerCam.GetComponent<InputSystem>().ResumeGame();
-                inventory_status = false;
+                inventoryStatus = false;
                 Cursor.lockState = CursorLockMode.Locked;
-                Background.SetActive(inventory_status);
-                inventory.SetActive(inventory_status);
-                player_audio.PlayOneShot(inventory_clip, UISoundVolume);
+                Background.SetActive(inventoryStatus);
+                inventory.SetActive(inventoryStatus);
+                playerAudio.PlayOneShot(inventoryClip, UISoundVolume);
             }
         }
     }
 
     public void DrawIcon()
     {
-        for (int i = 0; i < inventory_data.Length; i++)
+        for (int i = 0; i < inventoryData.Length; i++)
         {
-            var obj_id = inventory_data[i];
-            inventory_slots[i].GetComponent<RawImage>().texture = items[obj_id].icon;
-            if(inventory_items_amounts[i] != 0 && inventory_items_amounts[i] != 1)
+            var obj_id = inventoryData[i];
+            inventorySlots[i].GetComponent<RawImage>().texture = items[obj_id].icon;
+            if(inventoryItemsAmounts[i] != 0 && inventoryItemsAmounts[i] != 1)
             {
-                inventory_items_amounts_tmp[i].text = inventory_items_amounts[i].ToString();
+                inventoryItemsAmounts_tmp[i].text = inventoryItemsAmounts[i].ToString();
             } else {
-                inventory_items_amounts_tmp[i].text = "";
+                inventoryItemsAmounts_tmp[i].text = "";
             }
         }
     }
 
     public void AddtoInventory(int obj_id)
     {
-        if(CheckExistingItem(inventory_data, obj_id) == false)
+        if(CheckExistingItem(inventoryData, obj_id) == false)
         {
-            for (int i = 0; i < inventory_data.Length; i++)
+            for (int i = 0; i < inventoryData.Length; i++)
             {
-                if (inventory_data[i] == 0)
+                if (inventoryData[i] == 0)
                 {
-                    inventory_data[i] = obj_id;
-                    inventory_items_amounts[i] += 1;
+                    inventoryData[i] = obj_id;
+                    inventoryItemsAmounts[i] += 1;
                     break;
                 }
             }
         } else
         {
-            for (int i = 0; i < inventory_data.Length; i++)
+            for (int i = 0; i < inventoryData.Length; i++)
             {
-                if (inventory_data[i] == obj_id)
+                if (inventoryData[i] == obj_id)
                 {
-                    inventory_items_amounts[i] += 1;
+                    inventoryItemsAmounts[i] += 1;
                     break;
                 }
             }
@@ -129,5 +132,18 @@ public class Inventory : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void EquipItem(int slot_index)
+    {
+        if (slot_index >= 0 && slot_index < inventoryData.Length)
+        {
+            currentEquippedItem = inventoryData[slot_index];
+        }
+    }
+
+    public int GetCurrentEquippedItemIndex()
+    {
+        return currentEquippedItem;
     }
 }
