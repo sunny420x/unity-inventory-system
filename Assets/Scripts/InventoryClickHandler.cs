@@ -33,8 +33,8 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
 
     private GameObject[] slots;
 
-    private GameObject current_hold_item;
-    private int current_hold_item_slot_id;
+    private int currentEquippedItem;
+    private int currentEquippedItemSlotId;
 
     void Start()
     {
@@ -47,27 +47,32 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
         Button dropBtn_action = dropBtn.GetComponent<Button>();
         Button equipBtn_action = equipBtn.GetComponent<Button>();
 
+        currentEquippedItem = Player.GetComponent<Inventory>().getCurrentEquippedItemIndex();
+        currentEquippedItemSlotId = Player.GetComponent<Inventory>().getCurrentEquippedItemSlotId();
+
         //Get usable state of items.
 
         useBtn_action.onClick.AddListener(() => {
-            UseItem(Player, current_selected_slot, current_selected_item);
+            UseItem(current_selected_slot, current_selected_item);
         });
 
         dropBtn_action.onClick.AddListener(() => {
-            DropItem(Player, current_selected_slot, current_selected_item);
+            DropItem(current_selected_slot, current_selected_item);
         });
 
         equipBtn_action.onClick.AddListener(() =>
         {
-            EquipItem(Player, current_selected_slot, current_selected_item);
+            if(currentEquippedItem != 0)
+            {
+                UnequipItem();
+            }
+            else
+            {
+                EquipItem(current_selected_slot, current_selected_item);
+            }
         });
 
         slots = Player.GetComponent<Inventory>().inventorySlots;
-    }
-
-    void Update()
-    {
-
     }
 
     public void OnPointerClick(PointerEventData PointerEvent)
@@ -77,7 +82,7 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    void UseItem(GameObject Inventory, int slot_id, int obj_id)
+    void UseItem(int slot_id, int obj_id)
     {
         var inventoryData = Player.GetComponent<Inventory>().inventoryData;
         var inventoryItemsAmounts = Player.GetComponent<Inventory>().inventoryItemsAmounts;
@@ -102,18 +107,18 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
         Player.GetComponent<Inventory>().DrawIcon();
     }
 
-    void DropItem(GameObject Inventory, int slot_id, int obj_id)
+    void DropItem(int slot_id, int obj_id)
     {
         var inventoryData = Player.GetComponent<Inventory>().inventoryData;
         var inventoryItemsAmounts = Player.GetComponent<Inventory>().inventoryItemsAmounts;
 
-        if (slot_id == current_hold_item_slot_id)
+        if (slot_id == currentEquippedItemSlotId)
         {
             foreach (Transform child in HoldPosition)
             {
                 Destroy(child.gameObject);
             }
-            current_hold_item = null;
+            currentEquippedItem = 0;
         }
 
         if (inventoryItemsAmounts[slot_id] > 1)
@@ -138,7 +143,7 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
         ObjectSpawner.GetComponent<ObjectSpawner>().Spawner(obj_id);
     }
 
-    void EquipItem(GameObject Inventory, int slot_id, int obj_id)
+    void EquipItem(int slot_id, int obj_id)
     {
         Items itemsComponent = itemsManager.GetComponent<Items>();
 
@@ -148,56 +153,19 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
 
             if (itemData.prefab != null)
             {
-                if (current_hold_item != null)
+                if (currentEquippedItem != 0)
                 {
                     foreach (Transform child in HoldPosition)
                     {
                         Destroy(child.gameObject);
                     }
-                    current_hold_item = null;
+                    currentEquippedItem = 0;
                     equipBtn.GetComponentInChildren<TMP_Text>().text = "Equip";
                     return;
                 }
-                // Proceed with instantiation
-                current_hold_item = Instantiate(itemData.prefab, HoldPosition.position, HoldPosition.rotation);
-                current_hold_item.transform.SetParent(HoldPosition);
-                current_hold_item.layer = LayerMask.NameToLayer("Item");
-
-                foreach (Transform child in current_hold_item.transform)
-                {
-                    child.gameObject.layer = LayerMask.NameToLayer("Item");
-                }
-
-                // Access the Rigidbody component (if exists)
-                Rigidbody rb = current_hold_item.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    // Disable the Rigidbody's physics influence by making it kinematic
-                    rb.isKinematic = true;
-
-                    // Optionally, lock the position and rotation using constraints
-                    rb.constraints = RigidbodyConstraints.FreezeAll;
-                }
-
-                // Optionally, keep the item at the hold position in case any physics changes it
-                Vector3 lockedPosition = current_hold_item.transform.position;
-                lockedPosition.y = HoldPosition.position.y;  // Lock to the HoldPosition's Y
-                current_hold_item.transform.position = lockedPosition;
-
-
-                Collider[] colliders = current_hold_item.GetComponents<Collider>();
-                foreach (Collider col in colliders)
-                {
-                    col.enabled = false;  // Disable the collider
-                }
-
-                if (current_hold_item != null)
-                {
-                    equipBtn.GetComponentInChildren<TMP_Text>().text = "Unequip";
-                }
-
-                current_hold_item_slot_id = slot_id;
+                Player.GetComponent<Inventory>().EquipItem(slot_id);
+                currentEquippedItem = obj_id;
+                equipBtn.GetComponentInChildren<TMP_Text>().text = "Unequip";
             }
             else
             {
@@ -207,6 +175,20 @@ public class InventoryClickHandler : MonoBehaviour, IPointerClickHandler
         else
         {
             Debug.LogWarning("Invalid item ID or Items component is missing.");
+        }
+    }
+
+    void UnequipItem()
+    {
+        if (currentEquippedItem != 0)
+        {
+            foreach (Transform child in HoldPosition)
+            {
+                Destroy(child.gameObject);
+            }
+            currentEquippedItem = 0;
+            equipBtn.GetComponentInChildren<TMP_Text>().text = "Equip";
+            Player.GetComponent<Inventory>().UnequipItem();
         }
     }
 

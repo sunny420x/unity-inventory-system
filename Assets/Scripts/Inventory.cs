@@ -8,13 +8,12 @@ public class Inventory : MonoBehaviour
 {
 
     [Header("Inventory Setting")]
-    [SerializeField] private GameObject items_manager;
+    [SerializeField] private GameObject itemsManager;
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject Background;
     private bool inventoryStatus = false;
-
+    private Item[] items;
     private GameObject PlayerCam;
-    private GameObject PlayerFollowCamera;
 
     [Header("Inventory Data")]
     public int[] inventoryData = new int[]{
@@ -34,25 +33,34 @@ public class Inventory : MonoBehaviour
     public GameObject[] inventorySlots = new GameObject[]{
     };
 
-    private Item[] items;
 
     [Header("Player Audio Source")]
     private AudioSource playerAudio;
     private float UISoundVolume;
     [SerializeField] private AudioClip inventoryClip;
 
-    [SerializeField] private int currentEquippedItem = 0;
-    [SerializeField] private GameObject currentEquippedItemText;
+    [Header("Player Active Item")]
+    [SerializeField] private int currentEquippedItemId = 0;
+    [SerializeField] private int currentEquippedItemSlotId = 0;
+    [SerializeField] private TMP_Text currentEquippedItemText;
 
     void Start()
     {
         PlayerCam = GameObject.Find("MainCamera");
-        PlayerFollowCamera = GameObject.Find("PlayerFollowCamera");
-        items = items_manager.GetComponent<Items>().items;
+
+        // Import items from the items manager.
+        items = itemsManager.GetComponent<Items>().items;
+        
+        // Set the initial active state of the inventory UI.
         inventory.SetActive(inventoryStatus);
         Background.SetActive(inventoryStatus);
+        
+        // Audio setup for the player inventory.
         UISoundVolume = PlayerCam.GetComponent<InputSystem>().UISoundVolume;
         playerAudio = GetComponent<AudioSource>();
+
+        // Initialize the current equipped item text to be empty at the start.
+        currentEquippedItemText.text = "";
     }
 
     void Update()
@@ -136,14 +144,37 @@ public class Inventory : MonoBehaviour
 
     public void EquipItem(int slot_index)
     {
-        if (slot_index >= 0 && slot_index < inventoryData.Length)
+        if (slot_index < inventoryData.Length)
         {
-            currentEquippedItem = inventoryData[slot_index];
+            setCurrentEquippedItemSlotId(slot_index);
+            setCurrentEquippedItemId(inventoryData[slot_index]);
+            currentEquippedItemText.text = "Equipping: "+items[inventoryData[slot_index]].title;
         }
     }
 
-    public int GetCurrentEquippedItemIndex()
+    public void UnequipItem()
     {
-        return currentEquippedItem;
+        setCurrentEquippedItemId(0);
+        setCurrentEquippedItemSlotId(0);
+        currentEquippedItemText.text = "";
+    }
+
+    public int getCurrentEquippedItemIndex()
+    {
+        return currentEquippedItemId;
+    }
+
+    public int getCurrentEquippedItemSlotId()
+    {
+        return currentEquippedItemSlotId;
+    }
+    
+    public void setCurrentEquippedItemId(int item_id)
+    {
+        currentEquippedItemId = item_id;
+    }
+    public void setCurrentEquippedItemSlotId(int slot_id)
+    {
+        currentEquippedItemSlotId = slot_id;
     }
 }

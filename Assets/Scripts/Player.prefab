@@ -10896,10 +10896,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7557428618199903268}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 270, y: 30}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5777375111588093635
 CanvasRenderer:
@@ -10939,7 +10939,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.29411766}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -10963,7 +10963,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -15595,12 +15595,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Volume_Slider: {fileID: 5961919952921324883}
-  EnvironmentVolumeSlider: {fileID: 0}
-  MouseSensitivitySlider: {fileID: 0}
+  EnvironmentVolumeSlider: {fileID: 7863778925966133034}
+  MouseSensitivitySlider: {fileID: 1334525401451657817}
   InputSystem_Script: {fileID: 3453400814981987252}
-  VolumeValue: {fileID: 0}
-  EnvironmentVolumeValue: {fileID: 0}
-  MouseSensitivityValue: {fileID: 0}
+  VolumeValue: {fileID: 7943648663418594793}
+  EnvironmentVolumeValue: {fileID: 5423673590837251383}
+  MouseSensitivityValue: {fileID: 7857187495787273581}
   Player: {fileID: 8659740282264978360}
   Environment_Sounds: {fileID: 279165759144499604}
 --- !u!1 &8042276269432278169
@@ -16648,7 +16648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6e8935b6bbf4c64b378d97c49596fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  items_manager: {fileID: 1914595474531299203}
+  itemsManager: {fileID: 1914595474531299203}
   inventory: {fileID: 4776429117051646454}
   Background: {fileID: 8191299516488212308}
   inventoryData: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -16684,8 +16684,9 @@ MonoBehaviour:
   - {fileID: 5195926335347610600}
   - {fileID: 6720713244622842097}
   inventoryClip: {fileID: 8300000, guid: 0dc210db2d4184e1cb7e95058987bab1, type: 3}
-  currentEquippedItem: 0
-  currentEquippedItemText: {fileID: 0}
+  currentEquippedItemId: 0
+  currentEquippedItemSlotId: 0
+  currentEquippedItemText: {fileID: 3551181648472282525}
 --- !u!114 &5519349667003152540
 MonoBehaviour:
   m_ObjectHideFlags: 0
