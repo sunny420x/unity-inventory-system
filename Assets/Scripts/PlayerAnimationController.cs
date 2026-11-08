@@ -1,5 +1,4 @@
 using UnityEngine;
-using Cinemachine;
 using StarterAssets;
 
 public class PlayerAnimationController : MonoBehaviour
